@@ -45,6 +45,7 @@ const Profile = () => {
           <p><strong>Phone:</strong> {employee.phoneNumber}</p>
           <p><strong>Education:</strong> {employee.education}</p>
           <p><strong>Hire Date:</strong> {employee.hireDate}</p>
+             <p><strong>Date of Birth:</strong> {employee.dateOfBirth}</p>
           <p><strong>Status:</strong> {employee.status}</p>
           <p><strong>Designation:</strong> {employee.designation?.title}</p>
         </div>

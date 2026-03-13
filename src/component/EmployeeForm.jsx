@@ -17,7 +17,7 @@ const EmployeeForm = () => {
     name: "",
     email: "",
     phoneNumber: "",
-    dob: "",
+    dateOfBirth: "",
     education: "",
     sameAsCurrent: false,
     currentAddress: { ...emptyAddress },
@@ -38,8 +38,8 @@ const EmployeeForm = () => {
           email: data.email || "",
           phoneNumber: data.phoneNumber || "",
           education: data.education || "",
-          dob: data.dob
-            ? new Date(data.dob).toISOString().split("T")[0]
+          dateOfBirth: data.dateOfBirth
+            ? new Date(data.dateOfBirth).toISOString().split("T")[0]
             : "",
           currentAddress: data.currentAddress || emptyAddress,
           permanentAddress: data.permanentAddress || emptyAddress
@@ -107,12 +107,12 @@ const EmployeeForm = () => {
     else if (!phoneRegex.test(values.phoneNumber))
       newErrors.phoneNumber = "Phone must be 10 digits and started from 6";
 
-    if (!values.dob) newErrors.dob = "Date of birth required";
+    if (!values.dateOfBirth) newErrors.dateOfBirth = "Date of birth required";
     else {
-      const birthDate = new Date(values.dob);
+      const birthDate = new Date(values.dateOfBirth);
       const today = new Date();
       const age = today.getFullYear() - birthDate.getFullYear();
-      if (age < 18) newErrors.dob = "Age must be 18+";
+      if (age < 18) newErrors.dateOfBirth = "Age must be 18+";
     }
 
     const validateAddress = (address, type) => {
@@ -164,7 +164,8 @@ const EmployeeForm = () => {
     e.preventDefault();
     const isValid = validate(employee);
     if (!isValid) return;
-
+ console.log("Employee",employee);
+ 
     EmployeeService.updateMyProfile(employee)
       .then(() => {
         setIsSuccess(true);
@@ -193,7 +194,7 @@ const EmployeeForm = () => {
               <Input label="Name" name="name"  required value={employee.name} onChange={handleChange} error={errors.name} />
               <Input label="Email" name="email"  required value={employee.email} onChange={handleChange} error={errors.email} />
               <Input label="Phone Number" name="phoneNumber" maxLength={10} required value={employee.phoneNumber} onChange={handleChange} error={errors.phoneNumber} />
-              <Input type="date" label="Date of Birth" name="dob"  required value={employee.dob} onChange={handleChange} error={errors.dob} />
+              <Input type="date" label="Date of Birth" name="dateOfBirth"  required value={employee.dateOfBirth} onChange={handleChange} error={errors.dateOfBirth} />
               <Input label="Education" name="education" value={employee.education} onChange={handleChange} />
             </div>
           </div>

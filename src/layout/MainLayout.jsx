@@ -253,17 +253,31 @@ const MainLayout = () => {
   const token = localStorage.getItem("token");
 
   let role = null;
+  let lastLogin=null;
 
   if (token) {
     try {
       const decoded = jwtDecode(token);
       role = decoded?.role;
+      lastLogin = decoded?.lastLogin;
     } catch (error) {
       console.error("Invalid token");
     }
   }
 
 
+  //working but it show time in neno seconds which is not looking good so I change it
+  //  const [date, time] = lastLogin ? lastLogin.split("T") : ["First Time Login", ""];
+
+  let date = "First Time Login";
+let time = "";
+
+if (lastLogin) {
+  const d = new Date(lastLogin);
+  date = d.toLocaleDateString();
+  time = d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+}
+  
   const filteredLinks = SIDEBAR_LINKS.filter(menu =>
     menu.roles.includes(role)
   );
@@ -275,9 +289,8 @@ const MainLayout = () => {
       <Header
         source="https://i.pinimg.com/564x/d2/c1/6d/d2c16d99034f9407fd708dfc3356c688.jpg"
         title="Human Resource And Project Management"
-        date="29 Dec 2025"
-        time="12:18 PM"
-        options={["Admin", "User"]}
+        date={date}
+        time={time}
       />
 
       <div className="bodyLayout">

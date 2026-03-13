@@ -68,9 +68,12 @@
 
 .userSelect {
   background: transparent;
+  padding: 4px;
   border: none;
   color: white;
+   background-color: #95af4c;
   font-size: 12px;
+  border-radius: 4px;
   cursor: pointer;
   outline: none;
 }

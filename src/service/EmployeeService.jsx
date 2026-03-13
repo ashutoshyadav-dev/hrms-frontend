@@ -2,6 +2,8 @@ import api from "../api/api"; // your axios instance
 
 const EmployeeService = {
   // Admin update any employee
+   
+
   updateEmployeeByAdmin: (id, data) => {
     return api.put(`/admin/updateEmp/${id}`, data);
   },
@@ -21,7 +23,11 @@ const EmployeeService = {
     return api.get(`/employee/profile`);
   },
 
-  getDesignations: () => api.get(`/designations`)
+  getDesignations: () => {
+    return api.get(`/designations`);
+  },
+
+  getShifts: () => api.get(`/api/shifts`)
 
 };
 
