@@ -1,4 +1,4 @@
-.dashboard-container {
+/* .dashboard-container {
   height: 100%;
   padding: 40px;
   display: flex;
@@ -58,7 +58,7 @@
 }
 
 /* Floating animation */
-@keyframes float {
+/* @keyframes float {
   0% {
     transform: translateY(0px);
   }
@@ -68,4 +68,263 @@
   100% {
     transform: translateY(0px);
   }
+} */
+
+ /* ── root ── */
+.dash-root {
+  padding: 28px 24px;
+  background: #f5f6fa;
+  min-height: 100vh;
+  font-family: 'Segoe UI', sans-serif;
+  color: #111827;
 }
+
+/* ── header ── */
+.dash-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #fff;
+  border-radius: 16px;
+  padding: 18px 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 8px rgba(0,0,0,0.05);
+}
+
+.dash-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  font-weight: 700;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(99,102,241,0.35);
+}
+
+.dash-hinfo h2 {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 6px;
+}
+
+.dash-hinfo p {
+  margin: 0;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.dash-badge {
+  display: inline-block;
+  padding: 3px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.role-badge  { background: #eff6ff; color: #1d4ed8; }
+.shift-badge { background: #f0fdf4; color: #166534; }
+
+/* ── stat pills row ── */
+.dash-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+/* ── body layout ── */
+.dash-body {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 20px;
+  align-items: start;
+}
+
+@media (max-width: 820px) {
+  .dash-body { grid-template-columns: 1fr; }
+}
+
+/* ── card base ── */
+.dash-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 1px 8px rgba(0,0,0,0.05);
+}
+
+.dash-card-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dash-loading {
+  font-size: 11px;
+  color: #6366f1;
+  font-weight: 500;
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+/* ── calendar overrides ── */
+.dash-card-cal .react-calendar {
+  width: 100%;
+  border: none;
+  font-family: inherit;
+}
+
+.dash-card-cal .react-calendar__navigation button {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  background: none;
+  border-radius: 8px;
+}
+
+.dash-card-cal .react-calendar__navigation button:hover {
+  background: #f3f4f6;
+}
+
+.dash-card-cal .react-calendar__month-view__weekdays__weekday abbr {
+  text-decoration: none;
+  font-size: 11px;
+  font-weight: 600;
+  color: #9ca3af;
+}
+
+.dash-card-cal .react-calendar__tile {
+  border-radius: 8px;
+  padding: 10px 4px;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.15s ease;
+}
+
+.dash-card-cal .react-calendar__tile:hover {
+  background: #f3f4f6 !important;
+}
+
+.dash-card-cal .react-calendar__tile--now {
+  outline: 2px solid #6366f1;
+  outline-offset: -2px;
+  background: transparent !important;
+}
+
+/* status tile classes */
+.tile-present  { background: #dcfce7 !important; color: #166534 !important; }
+.tile-late     { background: #fef9c3 !important; color: #854d0e !important; }
+.tile-half     { background: #fce7f3 !important; color: #9d174d !important; }
+.tile-absent   { background: #fee2e2 !important; color: #991b1b !important; }
+.tile-leave    { background: #ede9fe !important; color: #5b21b6 !important; }
+.tile-holiday  { background: #e0f2fe !important; color: #075985 !important; }
+.tile-weekend  { opacity: 0.4; }
+.tile-upcoming { opacity: 0.55; }
+
+/* ── legend ── */
+.dash-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid #f3f4f6;
+}
+
+.leg-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: #6b7280;
+}
+
+.leg-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+/* ── side panel ── */
+.dash-side {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ── leave balance ── */
+.leave-summary-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: #6b7280;
+  margin-bottom: 8px;
+}
+
+.leave-remaining {
+  font-weight: 600;
+  color: #16a34a;
+}
+
+.leave-track {
+  height: 8px;
+  background: #f3f4f6;
+  border-radius: 99px;
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+
+.leave-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #6366f1, #8b5cf6);
+  border-radius: 99px;
+  transition: width 0.8s ease;
+}
+
+.leave-types {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.leave-type-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  padding: 8px 12px;
+  background: #f9fafb;
+  border-radius: 10px;
+  color: #374151;
+}
+
+.leave-type-row span:last-child {
+  font-weight: 600;
+}
+
+.shift-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: #f9fafb;
+  border-radius: 10px;
+  margin-bottom: 6px;
+  font-size: 13px;
+}
+
+.shift-key { color: #6b7280; }
+.shift-val { font-weight: 600; color: #111827; }

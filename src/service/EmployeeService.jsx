@@ -27,7 +27,19 @@ const EmployeeService = {
     return api.get(`/designations`);
   },
 
-  getShifts: () => api.get(`/api/shifts`)
+  getShifts: () => {
+     api.get(`/api/shifts`);
+  },
+
+  getAttendance: (empId, start, end) => {
+    return api.get(`/api/attendance/${empId}?start=${start}&end=${end}`);
+  },
+
+
+  getLeaves: () => {
+    return api.get(`/leaves`);
+  }
+
 
 };
 
