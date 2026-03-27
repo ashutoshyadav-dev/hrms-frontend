@@ -74,6 +74,8 @@ import Register from "../component/Register";
 import ViewAndUpdate from "../component/ViewAndUpdate";
 import MainLayout from "../layout/MainLayout";
 import ProtectedRoute from "../route/ProtectedRoute";
+import DocumentManager from "../component/DocumentManager";
+import DocumentAdmin from "../component/DocumentAdmin";
 // const EmployeeList = () => <h2>Employee List</h2>;
 // const EmployeeSearch = () => <h2>Search Employee</h2>;
 
@@ -233,7 +235,7 @@ const AppRoutes = () => {
             </ProtectedRoute>
           }
         />
-
+         
          <Route
           path="viewAndUpdate/:id"
           element={
@@ -242,6 +244,25 @@ const AppRoutes = () => {
             </ProtectedRoute>
           }
         />
+
+          <Route
+          path="myDocs"
+          element={
+            <ProtectedRoute allowedRoles={["ROLE_EMPLOYEE"]}>
+              <DocumentManager/>
+            </ProtectedRoute>
+          }
+        />
+
+         <Route
+          path="myDocsAdmin"
+          element={
+            <ProtectedRoute allowedRoles={["ROLE_ADMIN"]}>
+              <DocumentAdmin/>
+            </ProtectedRoute>
+          }
+        />
+
 
       </Route>
 

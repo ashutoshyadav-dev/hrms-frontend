@@ -181,6 +181,37 @@ const EmployeeList = () => {
     fetchEmployees();
   }, [page, search]); 
 
+
+  const downloadEmployees = async (format) => {
+    try {
+      const response = await api.get(`/api/export?format=${format}`,
+        {
+          responseType: "blob", 
+        }
+      );
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      const fileExtension = format === "excel" ? "xlsx" : format;
+      link.setAttribute("download", `employees.${fileExtension}`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Download failed", error);
+      alert("Failed to download file");
+    }
+  };
+
+  const handleChange = (e) => {
+    const selectedFormat = e.target.value;
+    if (selectedFormat) {
+      downloadEmployees(selectedFormat);
+    }
+  };
+
+
   if (loading) {
     return (
       <div className="text-center mt-10 text-lg font-semibold">
@@ -188,7 +219,7 @@ const EmployeeList = () => {
       </div>
     );
   }
-
+    
   return (
     <div className="min-h-screen bg-gray-100 p-8">
       <div className="bg-white shadow-xl rounded-2xl p-6">
@@ -316,6 +347,22 @@ const EmployeeList = () => {
           Next
         </button>
       </div>
+   
+   <br></br>
+
+     <div>
+      <select
+        defaultValue=""
+        onChange={handleChange}
+        className="bg-transparent border-none outline-none  text-blue-600 cursor-pointer">
+        <option value="" disabled className="text-gray-500">⬇ Export</option>
+        <option value="csv">CSV</option>
+        <option value="excel">Excel</option>
+        <option value="pdf">PDF</option>
+      </select>
+    </div>
+    
+    
     </div>
   );
 };

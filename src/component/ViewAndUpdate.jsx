@@ -57,6 +57,9 @@ const ViewAndUpdate = () => {
         ]);
 
         const data = empRes.data;
+        console.log("emp",empRes);
+        console.log("deg",desigRes);
+        console.log("shift",shiftRes);
 
         setDesignations(desigRes.data);
         setShifts(shiftRes.data);

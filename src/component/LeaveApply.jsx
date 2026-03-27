@@ -41,26 +41,53 @@ const LeaveApply = () => {
     }
   };
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   setMessage("");
+  //   setErrorMsg("");
+
+  //   try {
+  //     await api.post("/leaves/apply", leave); 
+  //     setMessage("Leave Request Submitted Successfully");
+
+  //     setLeave({
+  //       leaveType: "",
+  //       startDate: "",
+  //       endDate: "",
+  //       daysRequested: 0,
+  //       reason: "",
+  //     });
+  //   } catch (error) {
+  //     setErrorMsg("Error submitting leave request");
+  //   }
+  // };
+
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setMessage("");
-    setErrorMsg("");
+  e.preventDefault();
+  setMessage("");
+  setErrorMsg("");
 
-    try {
-      await api.post("/leaves/apply", leave); 
-      setMessage("Leave Request Submitted Successfully");
+  try {
+    await api.post("/leaves/apply", leave);
 
-      setLeave({
-        leaveType: "",
-        startDate: "",
-        endDate: "",
-        daysRequested: 0,
-        reason: "",
-      });
-    } catch (error) {
-      setErrorMsg("Error submitting leave request");
-    }
-  };
+    setMessage("Leave Request Submitted Successfully");
+
+    setLeave({
+      leaveType: "",
+      startDate: "",
+      endDate: "",
+      daysRequested: 0,
+      reason: "",
+    });
+
+  } catch (error) {
+    console.log("errorbacken",error.response?.data?.message);
+    
+    const msg = error.response?.data?.message || "Error submitting leave request";
+
+    setErrorMsg(msg);
+  }
+};
 
   return (
     <div className={styles.formContainer}>
@@ -139,3 +166,6 @@ const LeaveApply = () => {
 };
 
 export default LeaveApply;
+
+
+

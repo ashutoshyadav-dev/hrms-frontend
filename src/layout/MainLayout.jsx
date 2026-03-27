@@ -213,6 +213,20 @@ export const SIDEBAR_LINKS = [
     path: "/dashboard/addDesignationAdmin",
     roles: ["ROLE_ADMIN"]
   },
+  
+   {
+    id: 11,
+    label: "Document Management",
+    path: "/dashboard/myDocs",
+    roles: ["ROLE_EMPLOYEE"]
+  },
+
+  {
+    id: 12,
+    label: "Document Management",
+    path: "/dashboard/myDocsAdmin",
+    roles: ["ROLE_ADMIN"]
+  }
 ];
 
 

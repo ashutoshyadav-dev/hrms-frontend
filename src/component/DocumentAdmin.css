@@ -1,0 +1,78 @@
+.admin-container {
+  padding: 20px;
+}
+
+h2 {
+  margin-bottom: 20px;
+}
+
+.doc-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.doc-table th,
+.doc-table td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: left;
+}
+
+.doc-table th {
+  background-color: #f4f4f4;
+}
+
+.Button {
+    color: whitesmoke;
+  margin-right: 8px;
+  padding: 5px 10px;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+button:hover {
+  opacity: 0.8;
+}
+
+.error-box {
+  background-color: #fee2e2;
+  color: #b91c1c;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.success-box {
+  background-color: #dcfce7;
+  color: #166534;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.Button.delete {
+  background-color: #dc2626;
+}
+
+.Button.delete:hover {
+  background-color: #b91c1c;
+}
+
+.Button.down {
+  background-color: #5b0ec0;
+}
+
+.Button.down:hover {
+  background-color: #5b0ec0;
+}
+
+.Button.view {
+  background-color: #07a52e;
+}
+
+.Button.view:hover {
+  background-color: #07a52e;
+}

@@ -28,7 +28,7 @@ const EmployeeService = {
   },
 
   getShifts: () => {
-     api.get(`/api/shifts`);
+     return api.get(`/api/shifts`);
   },
 
   getAttendance: (empId, start, end) => {
