@@ -1,21 +1,24 @@
 import { useEffect, useState } from "react";
 import api from "../api/api";
+import { toast } from "react-toastify";
 import "./DocumentAdmin.css";
 
 const DocumentAdmin = () => {
   const [documents, setDocuments] = useState([]);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+ 
+
 
   const BASE = "api/documents";
 
   const fetchAllDocuments = async () => {
     try {
-      setError("");
       const res = await api.get(`${BASE}`);
+      console.log(res.data);
       setDocuments(res.data);
-    } catch (err) {
-      setError("Failed to load documents");
+    } catch (error) {
+      console.error("Document fetch Error",error);
+      const msg = error.response?.data?.message || "Failed to load documents";
+     toast.error(msg);
     }
   };
 
@@ -23,11 +26,9 @@ const DocumentAdmin = () => {
     fetchAllDocuments();
   }, []);
 
-  // 🔹 VIEW
+  
   const handleView = async (id) => {
     try {
-      setError("");
-
       const res = await api.get(`${BASE}/view/${id}`, {
         responseType: "blob",
       });
@@ -35,16 +36,16 @@ const DocumentAdmin = () => {
       const url = URL.createObjectURL(res.data);
       window.open(url);
 
-    } catch (err) {
-      setError("Unable to view document");
+    } catch (error) {
+      console.error("View Error",error);
+      const msg = error.response?.data?.message || "Unable to view document";
+     toast.error(msg);
     }
   };
 
-  // 🔹 DOWNLOAD
+  
   const handleDownload = async (id) => {
     try {
-      setError("");
-
       const res = await api.get(`${BASE}/download/${id}`, {
         responseType: "blob",
       });
@@ -71,39 +72,37 @@ const DocumentAdmin = () => {
       link.remove();
       window.URL.revokeObjectURL(url);
 
-    } catch (err) {
-      setError("Download failed");
+    } catch (error) {
+      console.error("Download Error",error);
+      const msg = error.response?.data?.message || "Download failed";
+     toast.error(msg);
     }
   };
 
-  // 🔹 DELETE
+  
   const handleDelete = async (id) => {
     try {
-      setError("");
-      setSuccess("");
-
       await api.delete(`${BASE}/${id}`);
 
-      setSuccess("Document deleted successfully");
+      toast.success("Document Delete successfully");
       fetchAllDocuments();
 
-    } catch (err) {
-      setError("Failed to delete document");
+    } catch (error) {
+      console.error("Delete Error",error);
+      const msg = error.response?.data?.message || "Failed to delete document";
+     toast.error(msg);
     }
   };
 
   return (
     <div className="admin-container">
       <h2>Document Management (Admin)</h2>
-
-      {/* ✅ Error & Success Messages */}
-      {error && <div className="error-box">{error}</div>}
-      {success && <div className="success-box">{success}</div>}
-
       <table className="doc-table">
         <thead>
           <tr>
-            <th>ID</th>
+            <th>Employee ID</th>
+            <th>Employee Name</th>
+            <th>Employee Designation</th>
             <th>Document Name</th>
             <th>Content Type</th>
             <th>Actions</th>
@@ -118,7 +117,9 @@ const DocumentAdmin = () => {
           ) : (
             documents.map((doc) => (
               <tr key={doc.id}>
-                <td>{doc.id}</td>
+                <td>{doc.employeeId}</td>
+                <td>{doc.employeeName}</td>
+                <td>{doc.designationTitle}</td>
                 <td>{doc.docName}</td>
                 <td>{doc.contentType}</td>
 

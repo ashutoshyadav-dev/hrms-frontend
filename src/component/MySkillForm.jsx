@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../api/api";
+import { toast } from "react-toastify";
 import styles from "./MySkillForm.module.css";
 
 const MySkillForm = () => {
@@ -12,33 +13,17 @@ const MySkillForm = () => {
   });
 
   const [technologies, setTechnologies] = useState([]);
-  const [message, setMessage] = useState("");
-  const [error, setError] = useState("");
+  const [mySkills, setMySkills] = useState([]);
+  const [isUpdate, setIsUpdate] = useState(false);
 
-  
-  const handleChange = (e) => {
-    const { name, value } = e.target;
 
-    // Experience validation
-    if (name === "experienceInMonths") {
-      if (value < 0) return;        
-      if (value > 600) return;      
-    }
-
-    setFormData({
-      ...formData,
-      [name]: value
-    });
-  };
-
-  
   useEffect(() => {
     const fetchTechnologies = async () => {
       try {
         const res = await api.get("/technologies");
         setTechnologies(res.data);
       } catch (err) {
-        console.error(err);
+        toast.error("Failed to fetch technologies");
       }
     };
 
@@ -46,51 +31,116 @@ const MySkillForm = () => {
   }, []);
 
   
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  useEffect(() => {
+    const fetchMySkills = async () => {
+      try {
+        const res = await api.get("/employee/getEmpTechnology");
+        setMySkills(res.data);
+      } catch (err) {
+        toast.error("Failed to fetch your skills");
+      }
+    };
 
-    const experienceMonths = Number(formData.experienceInMonths);
-
-    if (experienceMonths <= 0) {
-      setError("Experience must be greater than 0");
-      setMessage("");
-      return;
-    }
-
-    try {
-      await api.post("/employee/empTechnology", formData);
-
-      setMessage("Skill added successfully");
-      setError("");
-
-      setFormData({
-        technologyId: "",
-        experienceInMonths: "",
-        proficiency: "",
-        usageDescription: ""
-      });
-
-    } catch (err) {
-      setError("Failed to add skill");
-      setMessage("");
-    }
-  };
+    fetchMySkills();
+  }, []);
 
   
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+   
+    if (name === "experienceInMonths") {
+      if (value < 0 || value > 300) return;
+    }
+
+    if (name === "technologyId") {
+
+      const existingSkill = mySkills.find(
+        s => s.technologyId === Number(value)
+      );
+
+      if (existingSkill) {
+        toast.info("Skill already exists. You can update it.");
+
+        setIsUpdate(true);
+
+        setFormData({
+          technologyId: value,
+          experienceInMonths: existingSkill.experienceInMonths,
+          proficiency: existingSkill.proficiency,
+          usageDescription: existingSkill.usageDescription || ""
+        });
+
+        return;
+      } else {
+        setIsUpdate(false);
+
+        setFormData({
+          technologyId: value,
+          experienceInMonths: "",
+          proficiency: "",
+          usageDescription: ""
+        });
+
+        return;
+      }
+    }
+
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+   const handleSubmit = async (e) => {
+  e.preventDefault();
+
   const experienceMonths = Number(formData.experienceInMonths);
-  // const experienceYears = Math.floor(experienceMonths / 12);
+
+  if (experienceMonths <= 0) {
+    toast.warn("Experience must be greater than 0");
+    return;
+  }
+
+  try {
+    
+    await api.post("/employee/empTechnology", formData);
+
+    toast.success(
+      isUpdate ? "Skill updated successfully" : "Skill added successfully"
+    );
+
+    
+    const res = await api.get("/employee/getEmpTechnology");
+    setMySkills(res.data);
+
+    
+    setIsUpdate(false);
+    setFormData({
+      technologyId: "",
+      experienceInMonths: "",
+      proficiency: "",
+      usageDescription: ""
+    });
+
+  } catch (err) {
+    const msg = err.response?.data?.message || "Error while saving skill";
+    toast.error(msg);
+  }
+};
+  
+  const experienceMonths = Number(formData.experienceInMonths);
   const experienceYears = (experienceMonths / 12).toFixed(2);
 
   return (
     <div className={styles.formContainer}>
-      <h2 className={styles.heading}>Add Skill</h2>
-
-      {message && <p className={styles.success}>{message}</p>}
-      {error && <p className={styles.error}>{error}</p>}
+      <h2 className={styles.heading}>
+        {isUpdate ? "Update Skill" : "Add Skill"}
+      </h2>
 
       <form onSubmit={handleSubmit} className={styles.form}>
 
-       
+     
         <div className={styles.formGroup}>
           <label>Technology *</label>
           <select
@@ -121,7 +171,6 @@ const MySkillForm = () => {
             required
           />
 
-        
           {experienceMonths > 0 && experienceMonths < 24 && (
             <p className={styles.info}>
               Experience: {experienceMonths} month{experienceMonths !== 1 && "s"}
@@ -162,8 +211,9 @@ const MySkillForm = () => {
           />
         </div>
 
+     
         <button type="submit" className={styles.button}>
-          Add Skill
+          {isUpdate ? "Update Skill" : "Add Skill"}
         </button>
 
       </form>

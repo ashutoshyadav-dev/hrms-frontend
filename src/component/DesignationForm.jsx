@@ -1,5 +1,6 @@
 import { useState } from "react";
 import api from "../api/api";
+import { toast } from "react-toastify";
 import styles from "./Designation.module.css";
 
 const DesignationForm = () => {
@@ -31,20 +32,15 @@ const DesignationForm = () => {
         ...designation,
         baseSalary: parseFloat(designation.baseSalary),
       });
-
-      setMessage("Designation Created Successfully");
-
+      toast.success("Designation Created Successfully");
       setDesignation({
         title: "",
         description: "",
         baseSalary: "",
       });
     } catch (error) {
-      if (error.response?.status === 409) {
-        setErrorMsg(" Designation already exists (Title must be unique)");
-      } else {
-        setErrorMsg(" Error creating designation");
-      }
+     const msg = error.response?.data?.message || "error while creating designation";
+     toast.error(msg);
     } finally {
       setSubmitting(false);
     }

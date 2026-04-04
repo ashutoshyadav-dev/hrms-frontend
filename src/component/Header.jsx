@@ -2,45 +2,10 @@ import styles from "./Header.module.css";
 import { useState } from "react";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
-// import { FaCalendarAlt, FaClock, FaUserCircle } from "react-icons/fa";
-
-// const Header = ({ source, title, date, time, options }) => {
-//   return (
-//     <header className={styles.header}>
-      
-//       <div className={styles.left}>
-//         <img src={source} alt="Logo" className={styles.logo} />
-//         <span className={styles.title}>{title}</span>
-//       </div>
-
-      
-//       <div className={styles.right}>
-//         <div className={`${styles.infoBox} ${styles.calendar}`}>
-//           <FaCalendarAlt />
-//           <span>{date}</span>
-//         </div>
-
-//         <div className={`${styles.infoBox} ${styles.clock}`}>
-//           <FaClock />
-//           <span>{time}</span>
-//         </div>
-
-//         <div className={styles.userBox}>
-//           <FaUserCircle />
-//           <select className={styles.userSelect}>
-//             {options.map((opt, i) => (
-//               <option key={i}>{opt}</option>
-//             ))}
-//           </select>
-//         </div>
-//       </div>
-//     </header>
-//   );
-// };
-
-
-
+import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import NotificationBell from "./NotificationBell";
+
 
 const Header = ({ source, title, date, time }) => {
 
@@ -77,11 +42,10 @@ const employeeId = decoded.employeeId;
         }
       );
 
-      alert(`${type} successful`);
-
+      toast.success(`${type} successful`)
     } catch (error) {
-      console.error(error);
-      alert("Attendance failed");
+      const msg = error.response?.data?.message || "Attendance Failed";
+           toast.error(msg);
     }
   };
 
@@ -101,6 +65,13 @@ const employeeId = decoded.employeeId;
         <div className={styles.infoBox}>
           <span>{time}</span>
         </div>
+
+         {/* <div className={styles.infoBox}> */}
+         {/* <div style={{ position: "relative", display: "inline-block" }}> */}
+          <div style={{ position: "relative" }}>
+            <NotificationBell />
+          </div>
+        {/* </div> */}
         
          <div className={styles.userSelect}>
           <select value={attendanceType} onChange={handleAttendance}>
@@ -109,6 +80,7 @@ const employeeId = decoded.employeeId;
             <option value="CHECK_OUT">CHECK_OUT</option>
           </select>
         </div>
+        
 
         <div className={styles.userBox}>
           <button onClick={handleLogout}>

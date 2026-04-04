@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 import EmployeeService from "../service/EmployeeService";
 import styles from "./EmployeeForm.module.css";
 
@@ -97,8 +98,9 @@ const ViewAndUpdate = () => {
               }
             : { ...emptyAddress },
         });
-      } catch (err) {
-        console.error("Failed to load data:", err);
+      } catch (error) {
+        const msg = error.response?.data?.message || "Error while fetching employees,designation or shift";
+             toast.error(msg);
       } finally {
         setIsLoading(false);
       }
@@ -204,12 +206,14 @@ const ViewAndUpdate = () => {
       console.log(payload);
       
       await EmployeeService.updateEmployeeByAdmin(id, payload);
-
+      
+      toast.success("Employee details update successully");
       setIsSuccess(true);
       setIsFullEditEnabled(false);
       setTimeout(() => setIsSuccess(false), 3000);
-    } catch (err) {
-      console.error("Update failed:", err);
+    } catch (error) {
+      const msg = error.response?.data?.message || "Update failed";
+             toast.error(msg);
     }
   };
 

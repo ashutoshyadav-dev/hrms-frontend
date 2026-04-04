@@ -168,20 +168,20 @@ export const SIDEBAR_LINKS = [
   {
   id: 6,
   label: "Leave",
-  roles: ["ROLE_ADMIN", "ROLE_MANAGER", "ROLE_EMPLOYEE"],
+  roles: ["ROLE_ADMIN", "ROLE_EMPLOYEE"],
 
   children: [
     {
       id: 51,
       label: "Apply Leave",
       path: "/dashboard/leave/apply",
-      roles: ["ROLE_EMPLOYEE"]   
+      roles: ["ROLE_EMPLOYEE"]  
     },
     {
       id: 52,
       label: "Approve / Reject",
       path: "/dashboard/leave/approval",
-      roles: ["ROLE_ADMIN"]     
+      roles: ["ROLE_ADMIN"]   
     }
   ]
 },
@@ -292,12 +292,33 @@ if (lastLogin) {
   time = d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 }
   
-  const filteredLinks = SIDEBAR_LINKS.filter(menu =>
+  const filteredLink = SIDEBAR_LINKS.filter(menu =>
     menu.roles.includes(role)
   );
 
+  // const filteredLinks = SIDEBAR_LINKS.filter(menu =>{
+  //   // menu.roles.includes(role)
+  //   return (menu.label==="Leave" ? (menu.children.filter(men=>men.roles.includes(role))):(menu.roles.includes(role)))});
+  //   console.log(filteredLinks);
 
-
+  const filteredLinks = SIDEBAR_LINKS
+  .map(menu => {
+    if (menu.label === "Leave") {
+      return {
+        ...menu,
+        children: menu.children.filter(child =>
+          child.roles.includes(role)
+        )
+      };
+    }
+    return menu;
+  })
+  .filter(menu =>
+    menu.label === "Leave"
+      ? menu.children.length > 0
+      : menu.roles.includes(role)
+  );
+    
   return (
     <div className="app">
       <Header

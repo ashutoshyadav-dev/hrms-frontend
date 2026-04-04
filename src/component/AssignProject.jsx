@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import api from "../api/api";
 import styles from "./AssignProject.module.css";
 
@@ -30,8 +31,9 @@ const AssignProject=()=>{
     try {
       const empRes = await api.get("/employee/all");
       setEmployee(empRes.data);
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      const msg = error.response?.data?.message || "Unable to fetch employees";
+      toast.error(msg);
     }
   };
 
@@ -39,8 +41,9 @@ const AssignProject=()=>{
     try {
       const proRes = await api.get("/projects");
       setProject(proRes.data);
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      const msg = error.response?.data?.message || "Unable to fetch projects";
+      toast.error(msg);
     }
   };
 
@@ -58,7 +61,8 @@ useEffect(() => {
       );
       setModules(mpdRes.data);
     } catch (err) {
-      console.log(err);
+      const msg = error.response?.data?.message || "Unable to fetch modules";
+      toast.error(msg);
     }
   };
 
@@ -68,15 +72,15 @@ useEffect(() => {
    const handleSubmit = async (e) =>{
      e.preventDefault();
       try{
-         const res = await api.post("/assignProjectToEmp" ,formData);
-         setMessage("Data Submited sucessfully");
-         setErrors("")
+         const res = await api.post("/employee-assignments" ,formData);
+         toast.success("Project Assign sucessfully");
          setFormData(initialFormData);
       }
-      catch(err){
-         console.log(err);
-         setErrors("Something went wrong!!");
-         setMessage("");
+      catch(error){
+        //  console.log(error);
+         console.error(error);
+         const msg = error.response?.data?.message || "Unable to assign project";
+      toast.error(msg);
       }
    }
 

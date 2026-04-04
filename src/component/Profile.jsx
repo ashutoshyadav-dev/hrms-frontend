@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import styles from "./Profile.module.css";
 
 const Profile = () => {
@@ -24,7 +25,8 @@ const Profile = () => {
       console.log("Emp",res.data);
       
     } catch (error) {
-      console.error(error);
+      const msg = error.response?.data?.message || "Error while etching details";
+           toast.error(msg);
     }
   };
 

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import api from "../api/api";
+import { toast } from "react-toastify";
 import styles from "./ProjectForm.module.css";
 
 const ProjectForm = () => {
@@ -28,7 +29,7 @@ const ProjectForm = () => {
 
     try {
       await api.post("/projects", project);
-      setMessage("Project Created Successfully");
+      toast.success("Project Created Successfully");
 
       setProject({
         projectName: "",
@@ -38,11 +39,8 @@ const ProjectForm = () => {
         status: "",
       });
     } catch (error) {
-      if (error.response?.status === 403) {
-        setErrorMsg("Access Denied: You don't have permission to create projects");
-      } else {
-        setErrorMsg("Error creating project");
-      }
+     const msg = error.response?.data?.message || "Error Creating Project";
+     toast.error(msg);
     }
   };
 

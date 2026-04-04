@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { toast } from "react-toastify";
 import TechnologyService from "../service/technologyService";
 import styles from "./AddTechnologyAdmin.module.css";
 
@@ -21,11 +22,12 @@ const AddTechnologyAdmin = () => {
 
     TechnologyService.createTechnology(formData)
       .then(() => {
-        alert("Technology Added Successfully");
+        toast.success("Technology Added Successfully")
         setFormData({ name: "", technologyType: "" });
       })
-      .catch((err) => {
-        console.log(err);
+      .catch((error) => {
+        const msg = error.response?.data?.message || "Error while adding technology";
+        toast.error(msg);
       });
   };
 

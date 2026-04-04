@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../api/api";
+import { toast } from "react-toastify";
 import styles from "./MyProject.module.css";
 
 const MyProject = () => {
@@ -11,11 +12,12 @@ const MyProject = () => {
   useEffect(() => {
     const fetchAssignment = async () => {
       try {
-        const response = await api.get("/assignProjectToEmp/byEmail");
+        const response = await api.get("/employee-assignments/byEmail");
         setAssignments(response.data);  
         console.log(response.data);
-      } catch (err) {
-        setError("Failed to load assignment");
+      } catch (error) {
+        const msg = error.response?.data?.message || "Failed to load assignment";
+             toast.error(msg);
       } finally {
         setLoading(false);
       }

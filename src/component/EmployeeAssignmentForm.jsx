@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const EmployeeAssignmentForm = () => {
 
@@ -48,7 +49,7 @@ const EmployeeAssignmentForm = () => {
 
     try {
       const response = await axios.post(API_URL, assignment);
-      alert("Employee Assigned Successfully ");
+      toast.success("Employee Assigned Successfully");
       console.log(response.data);
 
       setAssignment({
@@ -62,7 +63,8 @@ const EmployeeAssignmentForm = () => {
 
     } catch (error) {
       console.error(error);
-      alert("Error assigning employee ");
+      const msg = error.response?.data?.message || "error while assigning employee";
+     toast.error(msg);
     }
   };
 

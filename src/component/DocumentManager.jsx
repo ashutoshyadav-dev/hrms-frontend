@@ -1,5 +1,6 @@
 import { useState } from "react";
 import api from "../api/api";
+import { toast } from "react-toastify";
 import { jwtDecode } from "jwt-decode";
 import "./DocumentManager.css";
 
@@ -18,7 +19,7 @@ const DocumentManager = () => {
 
   const handleUpload = async () => {
     if (!file || !empId) {
-      alert("File required");
+      toast.warning("File Required");
       return;
     }
 
@@ -43,15 +44,14 @@ const DocumentManager = () => {
           "Content-Type": "multipart/form-data",
         },
       });
-
-      alert("Uploaded successfully");
-
+      toast.success("Upload Successfully");
       fetchDocuments(); 
       setDocName("");
       setFile(null);
       setContentType("RESUME");
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      const msg = error.response?.data?.message || "Error while uploading document";
+     toast.error(msg);
     }
   };
 
@@ -60,8 +60,9 @@ const DocumentManager = () => {
       const res = await api.get(`${BASE}/emp/${empId}`);
       setDocuments(res.data);
       setLoaded(true);
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      const msg = error.response?.data?.message || "Unable to load documents";
+     toast.error(msg);
     }
   };
 
@@ -76,8 +77,9 @@ const DocumentManager = () => {
       const url = URL.createObjectURL(res.data);
 
       window.open(url); 
-    } catch (err) {
-      console.error("VIEW ERROR:", err);
+    } catch (error) {
+      const msg = error.response?.data?.message || "Unable to view";
+     toast.error(msg);
     }
   };
 
@@ -118,8 +120,9 @@ const DocumentManager = () => {
 
       link.remove();
       window.URL.revokeObjectURL(url);
-    } catch (err) {
-      console.error("DOWNLOAD ERROR:", err);
+    } catch (error) {
+      const msg = error.response?.data?.message || "Download Failed";
+     toast.error(msg);
     }
   };
 

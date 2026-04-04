@@ -1,0 +1,136 @@
+.container {
+  padding: 20px;
+  background: #f4f6f9;
+  min-height: 100vh;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.header input {
+  padding: 8px;
+  width: 250px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+/* PAGE */
+.project-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+  gap: 20px;
+  padding: 20px;
+  background: #f4f6f9;
+}
+
+/* PROJECT CARD */
+.project-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 18px; 
+  border: 1px solid #d1d5db;
+  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.15);
+  border-left: 5px solid #60a5fa;
+  transition: all 0.3s ease;
+}
+
+.project-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 35px rgba(59, 130, 246, 0.2);
+}
+
+/* HEADER */
+.project-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.project-header h2 {
+  color: #2563eb;
+  font-size: 20px;
+}
+
+.project-desc {
+  margin: 8px 0;
+  color: #555;
+}
+
+.project-dates {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  background: #f1f5f9;
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+
+/* STATUS */
+.status {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.status.active {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.status.completed {
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+/* MODULE */
+.module-section {
+  margin-top: 15px;
+}
+
+.module-card {
+  background: #f9fafb;
+  border-radius: 10px;
+  padding: 12px;
+  margin-top: 10px;
+  border: 1px solid #e5e7eb;
+}
+
+.module-card h4 {
+  margin-bottom: 4px;
+  color: #111827;
+}
+
+/* EMPLOYEE */
+.employee-section {
+  margin-top: 10px;
+}
+
+.employee-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 10px;
+  margin-top: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.emp-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+}
+
+.emp-details {
+  font-size: 13px;
+  color: #555;
+  margin-top: 5px;
+}
+
+.no-emp {
+  font-size: 13px;
+  color: #9ca3af;
+  font-style: italic;
+}

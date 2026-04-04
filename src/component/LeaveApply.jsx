@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { toast } from "react-toastify";
 import api from "../api/api";
 import styles from "./LeaveApply.module.css";
 
@@ -70,7 +71,8 @@ const LeaveApply = () => {
   try {
     await api.post("/leaves/apply", leave);
 
-    setMessage("Leave Request Submitted Successfully");
+    // setMessage("Leave Request Submitted Successfully");
+     toast.success("Leave applied successfully ✅");
 
     setLeave({
       leaveType: "",
@@ -83,9 +85,13 @@ const LeaveApply = () => {
   } catch (error) {
     console.log("errorbacken",error.response?.data?.message);
     
-    const msg = error.response?.data?.message || "Error submitting leave request";
+    // const msg = error.response?.data?.message || "Error submitting leave request";
 
-    setErrorMsg(msg);
+    // setErrorMsg(msg);
+
+      const msg =error.response?.data?.message || "Error while applying leave";
+
+    toast.error(msg );
   }
 };
 
@@ -105,6 +111,7 @@ const LeaveApply = () => {
             value={leave.leaveType}
             onChange={handleChange}
           >
+            <option value="">Select Leave type</option>
             <option value="SICK">SICK</option>
             <option value="VACATION">VACATION</option>
             <option value="PERSONAL">PERSONAL</option>

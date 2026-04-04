@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../api/api";
+import { toast } from "react-toastify";
 import styles from "./ModuleForm.module.css";
 
 const ModuleForm = () => {
@@ -21,20 +22,21 @@ const ModuleForm = () => {
       try {
         const [projectsRes, employeesRes] = await Promise.all([
           api.get("/projects"),
-          api.get("/admin/employees"),
+          api.get("/admin/employees/dropdown"),
         ]);
-
+        // console.log("emp",employeesRes);
+        // console.log("project",projectsRes);
+        
         const activeProjects = projectsRes.data.filter(
           (p) => p.status === "ACTIVE"
         );
         setProjects(activeProjects);
 
-        const activeEmployees = employeesRes.data.filter(
-          (e) => e.status === "ACTIVE"
-        );
+        const activeEmployees = employeesRes.data;
         setEmployees(activeEmployees);
       } catch (error) {
-        setMessage("Failed to load projects or employees.");
+        const msg = error.response?.data?.message || "Failed to load projects or employees.";
+        toast.error(msg);
       } finally {
         setLoading(false);
       }
@@ -64,7 +66,7 @@ const ModuleForm = () => {
 
       await api.post("/projects/modules", moduleData);
 
-      setMessage("Module created successfully!");
+      toast.success("Module created successfully");
 
       setModule({
         name: "",
@@ -73,7 +75,8 @@ const ModuleForm = () => {
         employeeId: "",
       });
     } catch (error) {
-      setMessage("Error creating module.");
+      const msg = error.response?.data?.message || "Error creating module";
+           toast.error(msg);
     } finally {
       setSubmitting(false);
     }

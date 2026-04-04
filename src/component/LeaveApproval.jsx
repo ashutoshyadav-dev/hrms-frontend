@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../api/api";
+import { toast } from "react-toastify";
 
 const LeaveApproval = () => {
   const [leaves, setLeaves] = useState([]);
@@ -12,7 +13,8 @@ const LeaveApproval = () => {
       console.log(response.data);
       
     } catch (error) {
-      console.error("Error fetching leaves");
+      const msg = error.response?.data?.message || "Error fetching leaves";
+           toast.error(msg);
     }
   };
 
@@ -23,20 +25,22 @@ const LeaveApproval = () => {
   const approveLeave = async (id) => {
     try {
       await api.put(`/leaves/${id}/approve`);
-      setMessage("Leave Approved ");
+      toast.success("Leave Approved");
       fetchLeaves();
     } catch (error) {
-      setMessage("Error approving leave ");
+      const msg = error.response?.data?.message || "Error approving leave";
+           toast.error(msg);
     }
   };
 
   const rejectLeave = async (id) => {
     try {
       await api.put(`/leaves/${id}/reject`);
-      setMessage("Leave Rejected ");
+      toast.success("Leave Rejected");
       fetchLeaves();
     } catch (error) {
-      setMessage("Error rejecting leave ");
+      const msg = error.response?.data?.message || "Error rejecting leave";
+           toast.error(msg);
     }
   };
 

@@ -2,7 +2,6 @@
 // import { useEffect, useState } from "react";
 // import "./Dashboard.css";
 
-
 // const Dashboard = () => {
 // const token = localStorage.getItem("token");
 
@@ -129,8 +128,7 @@
 
 //       console.log("attendance",attRes);
 //       console.log("leaves",leaveRes);
-      
-      
+
 //       setAttendance(attRes.data || []);
 //       setLeaves(leaveRes.data || []);
 //     } catch (e) {
@@ -157,7 +155,6 @@
 //     return "upcoming";
 //   };
 
- 
 //   const summary = { present:0, late:0, half:0, absent:0, leave:0 };
 //   const daysInMonth = new Date(calDate.getFullYear(), calDate.getMonth() + 1, 0).getDate();
 //   for (let i = 1; i <= daysInMonth; i++) {
@@ -174,7 +171,6 @@
 //   return (
 //     <div className="dash-root">
 
-      
 //       <div className="dash-header">
 //         <div className="dash-avatar">{getInitials(name)}</div>
 //         <div className="dash-hinfo">
@@ -186,7 +182,6 @@
 //         </div>
 //       </div>
 
-   
 //       <div className="dash-stats">
 //         {["present","late","half","absent","leave"].map(s => (
 //           <StatPill
@@ -201,7 +196,6 @@
 
 //       <div className="dash-body">
 
-      
 //         <div className="dash-card dash-card-cal">
 //           <div className="dash-card-title">
 //             Attendance — {MONTHS[calDate.getMonth()]} {calDate.getFullYear()}
@@ -228,7 +222,6 @@
 
 //         <div className="dash-side">
 
-        
 //           <div className="dash-card">
 //             <div className="dash-card-title">Leave Balance</div>
 //             <div className="leave-summary-row">
@@ -252,7 +245,6 @@
 //             </div>
 //           </div>
 
-    
 //           <div className="dash-card">
 //             <div className="dash-card-title">Shift Details</div>
 //             {[
@@ -277,59 +269,91 @@
 
 // export default Dashboard;
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Calendar from "react-calendar";
+import { toast } from "react-toastify";
 import "react-calendar/dist/Calendar.css";
 import { jwtDecode } from "jwt-decode";
 import EmployeeService from "../service/EmployeeService";
 import "./Dashboard.css";
 
 const STATUS_META = {
-  present:  { label: "Present",  color: "#16a34a", bg: "#dcfce7" },
-  late:     { label: "Late",     color: "#d97706", bg: "#fef9c3" },
-  half:     { label: "Half Day", color: "#db2777", bg: "#fce7f3" },
-  absent:   { label: "Absent",   color: "#dc2626", bg: "#fee2e2" },
-  leave:    { label: "Leave",    color: "#7c3aed", bg: "#ede9fe" },
-  holiday:  { label: "Holiday",  color: "#0369a1", bg: "#e0f2fe" },
+  present: { label: "Present", color: "#16a34a", bg: "#dcfce7" },
+  late: { label: "Late", color: "#d97706", bg: "#fef9c3" },
+  half: { label: "Half Day", color: "#db2777", bg: "#fce7f3" },
+  absent: { label: "Absent", color: "#dc2626", bg: "#fee2e2" },
+  leave: { label: "Leave", color: "#7c3aed", bg: "#ede9fe" },
+  holiday: { label: "Holiday", color: "#0369a1", bg: "#e0f2fe" },
   upcoming: { label: "Upcoming", color: "#9ca3af", bg: "transparent" },
-  weekend:  { label: "Weekend",  color: "#d1d5db", bg: "transparent" },
+  weekend: { label: "Weekend", color: "#d1d5db", bg: "transparent" },
 };
 
 const MONTHS = [
-  "January","February","March","April","May","June",
-  "July","August","September","October","November","December",
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
 ];
 
 const today = new Date();
 
 function getInitials(name = "") {
-  return name.trim().split(" ").map(w => w[0]).join("").substring(0, 2).toUpperCase();
+  return name
+    .trim()
+    .split(" ")
+    .map((w) => w[0])
+    .join("")
+    .substring(0, 2)
+    .toUpperCase();
 }
 
 function StatPill({ label, count, color, bg }) {
   return (
-    <div style={{ display:"flex", alignItems:"center", gap:8, padding:"7px 14px", borderRadius:30, background:bg }}>
-      <span style={{ width:8, height:8, borderRadius:"50%", background:color }} />
-      <span style={{ fontSize:13, color, fontWeight:600 }}>{count}</span>
-      <span style={{ fontSize:12, color, opacity:0.8 }}>{label}</span>
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 8,
+        padding: "7px 14px",
+        borderRadius: 30,
+        background: bg,
+      }}
+    >
+      <span
+        style={{ width: 8, height: 8, borderRadius: "50%", background: color }}
+      />
+      <span style={{ fontSize: 13, color, fontWeight: 600 }}>{count}</span>
+      <span style={{ fontSize: 12, color, opacity: 0.8 }}>{label}</span>
     </div>
   );
 }
 
 const Dashboard = () => {
-  const token   = localStorage.getItem("token");
+  const token = localStorage.getItem("token");
   const decoded = token ? jwtDecode(token) : {};
 
   const empId = decoded?.employeeId || decoded?.id;
-  const name  = decoded?.employeeName || decoded?.name || "Employee";
-  const role  = (decoded?.role || "ROLE_EMPLOYEE").replace("ROLE_", "");
+  const name = decoded?.employeeName || decoded?.name || "Employee";
+  const role = (decoded?.role || "ROLE_EMPLOYEE").replace("ROLE_", "");
 
   const [calDate, setCalDate] = useState(today);
   const [attendance, setAttendance] = useState([]);
   const [leaves, setLeaves] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const hasFetched = useRef(false);
+
   useEffect(() => {
+    if (hasFetched.current) return;
+    hasFetched.current = true;
     loadData(calDate);
   }, [calDate.getFullYear(), calDate.getMonth()]);
 
@@ -339,23 +363,36 @@ const Dashboard = () => {
       const year = d.getFullYear();
       const month = String(d.getMonth() + 1).padStart(2, "0");
       const lastDay = new Date(year, d.getMonth() + 1, 0).getDate();
+      console.log("empid", empId);
 
       const [attRes, leaveRes] = await Promise.all([
-        EmployeeService.getAttendance(empId, `${year}-${month}-01`, `${year}-${month}-${lastDay}`),
+        EmployeeService.getAttendance(
+          empId,
+          `${year}-${month}-01`,
+          `${year}-${month}-${lastDay}`,
+        ),
         EmployeeService.getLeaves(),
       ]);
-       console.log("attendance",attRes);
+      console.log("attendance", attRes);
+      console.log("leave", leaveRes);
       setAttendance(attRes.data || []);
       setLeaves(leaveRes.data || []);
-    } catch (e) {
-      console.error("Failed to load data", e);
+    } catch (error) {
+      console.error("FULL ERROR:", error.response);
+      const msg =
+        error.response?.data?.message ||
+        "Unable to fetch attendances or leaves";
+      if (role !== "ADMIN") {
+        toast.error(msg);
+      } else {
+        console.log(msg);
+      }
     } finally {
       setLoading(false);
     }
   };
 
-  
-  const shift = attendance.find(a => a.shift != null)?.shift;
+  const shift = attendance.find((a) => a.shift != null)?.shift;
 
   const formatTime = (time) => {
     if (!time) return "-";
@@ -365,30 +402,28 @@ const Dashboard = () => {
     hour = hour % 12 || 12;
     return `${hour}:${m} ${ampm}`;
   };
-   
-  const formatLocalDate = (date) =>
-  date.toLocaleDateString("en-CA"); 
 
+  const formatLocalDate = (date) => date.toLocaleDateString("en-CA");
 
   const getStatus = (date) => {
     // const d = date.toISOString().split("T")[0];
 
-    
-const d = formatLocalDate(date);
+    const d = formatLocalDate(date);
 
     const dow = date.getDay();
     if (dow === 0 || dow === 6) return "weekend";
 
     const onLeave = leaves.find(
-      l =>
+      (l) =>
         l.employeeId === empId &&
-        d >= l.startDate &&
-        d <= l.endDate &&
-        l.status === "APPROVED"
+        new Date(d) >= new Date(l.startDate) &&
+        new Date(d) <= new Date(l.endDate) &&
+        l.leaveStatus === "APPROVED",
     );
+
     if (onLeave) return "leave";
 
-    const record = attendance.find(a => a.date === d);
+    const record = attendance.find((a) => a.date === d);
 
     if (!record) return date > today ? "upcoming" : "absent";
 
@@ -405,9 +440,13 @@ const d = formatLocalDate(date);
     return "absent";
   };
 
-  const summary = { present:0, late:0, half:0, absent:0, leave:0 };
+  const daysInMonth = new Date(
+    calDate.getFullYear(),
+    calDate.getMonth() + 1,
+    0,
+  ).getDate();
 
-  const daysInMonth = new Date(calDate.getFullYear(), calDate.getMonth() + 1, 0).getDate();
+  const summary = { present: 0, late: 0, half: 0, absent: 0, leave: 0 };
 
   for (let i = 1; i <= daysInMonth; i++) {
     const d = new Date(calDate.getFullYear(), calDate.getMonth(), i);
@@ -417,13 +456,25 @@ const d = formatLocalDate(date);
     if (summary[s] !== undefined) summary[s]++;
   }
 
-  const leaveUsed  = leaves.filter(l => l.employeeId === empId && l.status === "APPROVED").length;
-  const leaveTotal = 10;
-  const leavePct   = Math.min(Math.round((leaveUsed / leaveTotal) * 100), 100);
+  let leaveUsed = 0;
+
+  leaves.forEach((l) => {
+    if (l.employeeId === empId && l.leaveStatus === "APPROVED") {
+      const start = new Date(l.startDate);
+      const end = new Date(l.endDate);
+
+      for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+        leaveUsed++;
+      }
+    }
+  });
+
+  const leaveTotal = 5;
+
+  const leavePct = Math.min(Math.round((leaveUsed / leaveTotal) * 100), 100);
 
   return (
     <div className="dash-root">
-
       <div className="dash-header">
         <div className="dash-avatar">{getInitials(name)}</div>
         <div className="dash-hinfo">
@@ -438,7 +489,7 @@ const d = formatLocalDate(date);
       </div>
 
       <div className="dash-stats">
-        {["present","late","half","absent","leave"].map(s => (
+        {["present", "late", "half", "absent", "leave"].map((s) => (
           <StatPill
             key={s}
             label={STATUS_META[s].label}
@@ -450,7 +501,6 @@ const d = formatLocalDate(date);
       </div>
 
       <div className="dash-body">
-
         <div className="dash-card dash-card-cal">
           <div className="dash-card-title">
             Attendance — {MONTHS[calDate.getMonth()]} {calDate.getFullYear()}
@@ -459,32 +509,36 @@ const d = formatLocalDate(date);
 
           <Calendar
             value={calDate}
-            onActiveStartDateChange={({ activeStartDate }) => setCalDate(activeStartDate)}
+            onActiveStartDateChange={({ activeStartDate }) =>
+              setCalDate(activeStartDate)
+            }
             tileClassName={({ date, view }) =>
               view === "month" ? `tile-${getStatus(date)}` : null
             }
           />
           <div className="dash-legend">
-  {["present","late","half","absent","leave","holiday"].map(s => (
-    <div key={s} className="leg-item">
-      <span
-        className="leg-dot"
-        style={{ background: STATUS_META[s].color }}
-      />
-      <span>{STATUS_META[s].label}</span>
-    </div>
-  ))}
-</div>
-
+            {["present", "late", "half", "absent", "leave", "holiday"].map(
+              (s) => (
+                <div key={s} className="leg-item">
+                  <span
+                    className="leg-dot"
+                    style={{ background: STATUS_META[s].color }}
+                  />
+                  <span>{STATUS_META[s].label}</span>
+                </div>
+              ),
+            )}
+          </div>
         </div>
 
         <div className="dash-side">
-
           <div className="dash-card">
             <div className="dash-card-title">Leave Balance</div>
             <div className="leave-summary-row">
               <span>{leaveUsed} used</span>
-              <span className="leave-remaining">{leaveTotal - leaveUsed} remaining</span>
+              <span className="leave-remaining">
+                {leaveTotal - leaveUsed} remaining
+              </span>
             </div>
             <div className="leave-track">
               <div className="leave-fill" style={{ width: leavePct + "%" }} />
@@ -503,9 +557,17 @@ const d = formatLocalDate(date);
                 ["Shift", shift.name],
                 ["Check In Time", formatTime(shift.startTime)],
                 ["Check Out Time", formatTime(shift.endTime)],
-                ["Working Hours", shift.requiredWorkHours ? `${shift.requiredWorkHours} hrs` : "-"],
+                [
+                  "Working Hours",
+                  shift.requiredWorkHours
+                    ? `${shift.requiredWorkHours} hrs`
+                    : "-",
+                ],
                 ["Flexible", shift.flexible ? "Yes" : "No"],
-                shift.flexible && ["Flex Start Limit", formatTime(shift.flexibleStartLimit)],
+                shift.flexible && [
+                  "Flex Start Limit",
+                  formatTime(shift.flexibleStartLimit),
+                ],
               ]
                 .filter(Boolean)
                 .map(([k, v]) => (
@@ -516,7 +578,6 @@ const d = formatLocalDate(date);
                 ))
             )}
           </div>
-
         </div>
       </div>
     </div>

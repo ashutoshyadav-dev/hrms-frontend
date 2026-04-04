@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import EmployeeService from "../service/EmployeeService";
 import styles from "./EmployeeForm.module.css";
 
@@ -45,7 +46,10 @@ const EmployeeForm = () => {
           permanentAddress: data.permanentAddress || emptyAddress
         }));
       })
-      .catch(err => console.log(err));
+      .catch(error => {
+        const msg = error.response?.data?.message || "error while getting employee detail";
+     toast.error(msg);
+      });
   }, []);
 
   const handleChange = (e) => {
@@ -160,6 +164,15 @@ const EmployeeForm = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  const getMaxDOB = () => {
+  const today = new Date();
+  const year = today.getFullYear() - 18;
+  const month = String(today.getMonth() + 1).padStart(2, "0");
+  const day = String(today.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+};
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const isValid = validate(employee);
@@ -168,9 +181,13 @@ const EmployeeForm = () => {
  
     EmployeeService.updateMyProfile(employee)
       .then(() => {
+        toast.success("Employee Details updates successully");
         setIsSuccess(true);
       })
-      .catch(err => console.log(err));
+      .catch(error =>{
+          const msg = error.response?.data?.message || "Error while updating employee details";
+     toast.error(msg);
+      });
   };
 
   return (
@@ -194,7 +211,7 @@ const EmployeeForm = () => {
               <Input label="Name" name="name"  required value={employee.name} onChange={handleChange} error={errors.name} />
               <Input label="Email" name="email"  required value={employee.email} onChange={handleChange} error={errors.email} />
               <Input label="Phone Number" name="phoneNumber" maxLength={10} required value={employee.phoneNumber} onChange={handleChange} error={errors.phoneNumber} />
-              <Input type="date" label="Date of Birth" name="dateOfBirth"  required value={employee.dateOfBirth} onChange={handleChange} error={errors.dateOfBirth} />
+              <Input type="date"  max={getMaxDOB()}  label="Date of Birth" name="dateOfBirth"  required value={employee.dateOfBirth} onChange={handleChange} error={errors.dateOfBirth} />
               <Input label="Education" name="education" value={employee.education} onChange={handleChange} />
             </div>
           </div>

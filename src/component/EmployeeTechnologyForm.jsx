@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import axios from "axios";
 
 const EmployeeTechnologyForm = () => {
@@ -19,13 +20,25 @@ const EmployeeTechnologyForm = () => {
   }, []);
 
   const fetchEmployees = async () => {
-    const res = await axios.get("http://localhost:8080/employee");
+    try{
+      const res = await axios.get("http://localhost:8080/employee");
     setEmployees(res.data);
+    }
+    catch(error){
+       const msg =error.response?.data?.message || "Error while fetching employee";
+       toast.error(msg );
+    }
   };
 
   const fetchTechnologies = async () => {
-    const res = await axios.get("http://localhost:8080/technologie");
+    try{
+      const res = await axios.get("http://localhost:8080/technologie");
     setTechnologies(res.data);
+    }
+    catch(error){
+       const msg =error.response?.data?.message || "Error while fetching technology";
+       toast.error(msg );
+    }
   };
 
   const handleChange = (e) => {
@@ -50,7 +63,7 @@ const EmployeeTechnologyForm = () => {
         "http://localhost:8080/api/employee-technologies",
         payload
       );
-      alert("Technology Assigned Successfully ");
+      toast.success("Technology Assigned Successfully");
 
       setFormData({
         employeeId: "",
@@ -60,8 +73,8 @@ const EmployeeTechnologyForm = () => {
       });
 
     } catch (error) {
-      console.error(error);
-      alert("Error assigning technology ");
+      const msg = error.response?.data?.message || "Error assigning technology";
+     toast.error(msg);
     }
   };
 
