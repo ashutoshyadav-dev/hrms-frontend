@@ -76,6 +76,9 @@ import MainLayout from "../layout/MainLayout";
 import ProtectedRoute from "../route/ProtectedRoute";
 import DocumentManager from "../component/DocumentManager";
 import DocumentAdmin from "../component/DocumentAdmin";
+import AllowedIpManager from "../component/AllowedIpManager";
+import ShiftManager from "../component/ShiftManager";
+import FileUploadManager from "../component/FileUploadManager";
 // const EmployeeList = () => <h2>Employee List</h2>;
 // const EmployeeSearch = () => <h2>Search Employee</h2>;
 
@@ -259,6 +262,33 @@ const AppRoutes = () => {
           element={
             <ProtectedRoute allowedRoles={["ROLE_ADMIN"]}>
               <DocumentAdmin/>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="ipDetails"
+          element={
+            <ProtectedRoute allowedRoles={["ROLE_ADMIN"]}>
+              <AllowedIpManager/>
+            </ProtectedRoute>
+          }
+        />
+
+         <Route
+          path="shiftDetails"
+          element={
+            <ProtectedRoute allowedRoles={["ROLE_ADMIN"]}>
+              <ShiftManager/>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="fileUpload"
+          element={
+            <ProtectedRoute allowedRoles={["ROLE_ADMIN"]}>
+              <FileUploadManager/>
             </ProtectedRoute>
           }
         />

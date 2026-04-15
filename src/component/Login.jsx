@@ -46,11 +46,11 @@ const Login = () => {
     const newError = {};
     const emailRegex = /^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
 
-    if (!values.email) {
-      newError.email = "Email is required";
-    } else if (!emailRegex.test(values.email)) {
-      newError.email = "Invalid email format";
-    }
+    // if (!values.email) {
+    //   newError.email = "Email is required";
+    // } else if (!emailRegex.test(values.email)) {
+    //   newError.email = "Invalid email format";
+    // }
 
     if (!values.password) {
       newError.password = "Password is required";

@@ -220,12 +220,29 @@ export const SIDEBAR_LINKS = [
     path: "/dashboard/myDocs",
     roles: ["ROLE_EMPLOYEE"]
   },
-
   {
     id: 12,
     label: "Document Management",
     path: "/dashboard/myDocsAdmin",
     roles: ["ROLE_ADMIN"]
+  },
+  {
+    id: 13,
+    label: "Ip Management",
+    path: "/dashboard/ipDetails",
+    roles: ["ROLE_ADMIN"]
+  },
+   {
+    id: 14,
+    label: "Shift Management",
+    path: "/dashboard/shiftDetails",
+    roles: ["ROLE_ADMIN"]
+  },
+  {
+    id:15,
+    label:"Bulk Data Upload",
+    path:"/dashboard/fileUpload",
+    roles:["ROLE_ADMIN"]
   }
 ];
 
